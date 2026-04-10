@@ -51,7 +51,24 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   )
 }
 
-// Toast Component - Removed, no more toasters
+// Form Field Component
+const FormField = ({ label, value, onChange, type = 'text', required = false, options = [] }) => (
+  <div className="form-group">
+    <label className="form-label">{label}{required && <span style={{ color: '#EF4444' }}> *</span>}</label>
+    {type === 'select' ? (
+      <select className="form-select" value={value} onChange={onChange} required={required}>
+        <option value="">Select...</option>
+        {options.map(opt => (
+          <option key={opt.value} value={opt.value}>{opt.label}</option>
+        ))}
+      </select>
+    ) : type === 'textarea' ? (
+      <textarea className="form-input" value={value} onChange={onChange} rows={3} />
+    ) : (
+      <input className="form-input" type={type} value={value} onChange={onChange} required={required} />
+    )}
+  </div>
+)
 
 // Sidebar Component
 const Sidebar = ({ collapsed, setCollapsed }) => {
@@ -453,27 +470,38 @@ const AreaChartComponent = ({ data }) => (
 // Sites Component
 const Sites = ({ sites, setSites }) => {
   const [view, setView] = useState('grid')
-  
+  const [showModal, setShowModal] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '', location: '', type: 'Commercial', budget: '', manager: ''
+  })
+
   const handleAddSite = () => {
+    setShowModal(true)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     const newSite = {
       id: `site-${Date.now()}`,
-      name: 'New Construction Site',
-      location: 'New Location',
-      type: 'Commercial',
+      name: formData.name || 'New Construction Site',
+      location: formData.location || 'New Location',
+      type: formData.type,
       progress: 0,
       status: 'active',
       startDate: new Date().toISOString().split('T')[0],
       endDate: '2026-12-31',
-      budget: 10000000,
+      budget: parseInt(formData.budget) || 10000000,
       spent: 0,
       activeTasks: 0,
       workers: 0,
-      manager: 'TBD',
+      manager: formData.manager || 'TBD',
       image: '🏗️'
     }
     setSites([...sites, newSite])
+    setShowModal(false)
+    setFormData({ name: '', location: '', type: 'Commercial', budget: '', manager: '' })
   }
-  
+
   return (
     <div className="page-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -502,6 +530,26 @@ const Sites = ({ sites, setSites }) => {
           </button>
         </div>
       </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add New Site">
+        <form onSubmit={handleSubmit}>
+          <FormField label="Site Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+          <FormField label="Location" value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} required />
+          <FormField label="Type" type="select" value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} 
+            options={[
+              { value: 'Commercial', label: 'Commercial' },
+              { value: 'Residential', label: 'Residential' },
+              { value: 'Hospitality', label: 'Hospitality' },
+              { value: 'Infrastructure', label: 'Infrastructure' }
+            ]} />
+          <FormField label="Budget (₹)" type="number" value={formData.budget} onChange={(e) => setFormData({...formData, budget: e.target.value})} placeholder="10000000" />
+          <FormField label="Project Manager" value={formData.manager} onChange={(e) => setFormData({...formData, manager: e.target.value})} />
+          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} style={{ flex: 1 }}>Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Add Site</button>
+          </div>
+        </form>
+      </Modal>
 
       <div style={{ display: 'grid', gridTemplateColumns: view === 'grid' ? 'repeat(3, 1fr)' : '1fr', gap: 20 }}>
         {sites.map((site) => (
@@ -568,6 +616,10 @@ const Sites = ({ sites, setSites }) => {
 const Materials = ({ materials, setMaterials, sites }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [showModal, setShowModal] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '', category: 'Cement', unit: 'pcs', price: '', totalStock: '', minStock: ''
+  })
   
   const categories = [...new Set(materials.map(m => m.category))]
   
@@ -584,16 +636,23 @@ const Materials = ({ materials, setMaterials, sites }) => {
   }
 
   const handleAddMaterial = () => {
+    setShowModal(true)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     const newMaterial = {
       id: `mat-${Date.now()}`,
-      name: 'New Material',
-      category: 'General',
-      unit: 'pcs',
-      price: 100,
-      totalStock: 0,
-      minStock: 100
+      name: formData.name || 'New Material',
+      category: formData.category,
+      unit: formData.unit,
+      price: parseInt(formData.price) || 100,
+      totalStock: parseInt(formData.totalStock) || 0,
+      minStock: parseInt(formData.minStock) || 100
     }
     setMaterials([...materials, newMaterial])
+    setShowModal(false)
+    setFormData({ name: '', category: 'Cement', unit: 'pcs', price: '', totalStock: '', minStock: '' })
   }
 
   return (
@@ -608,6 +667,32 @@ const Materials = ({ materials, setMaterials, sites }) => {
           Add Material
         </button>
       </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add New Material">
+        <form onSubmit={handleSubmit}>
+          <FormField label="Material Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+          <FormField label="Category" type="select" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}
+            options={categories.map(c => ({ value: c, label: c }))} />
+          <FormField label="Unit" type="select" value={formData.unit} onChange={(e) => setFormData({...formData, unit: e.target.value})}
+            options={[
+              { value: 'pcs', label: 'Pieces' },
+              { value: 'bag', label: 'Bags' },
+              { value: 'ton', label: 'Tons' },
+              { value: 'kg', label: 'Kilograms' },
+              { value: 'meter', label: 'Meters' },
+              { value: 'sqft', label: 'Square Feet' },
+              { value: 'cuft', label: 'Cubic Feet' },
+              { value: 'liter', label: 'Liters' }
+            ]} />
+          <FormField label="Price per Unit (₹)" type="number" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required />
+          <FormField label="Initial Stock" type="number" value={formData.totalStock} onChange={(e) => setFormData({...formData, totalStock: e.target.value})} />
+          <FormField label="Minimum Stock Alert" type="number" value={formData.minStock} onChange={(e) => setFormData({...formData, minStock: e.target.value})} />
+          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} style={{ flex: 1 }}>Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Add Material</button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="card">
         <div className="card-header">
@@ -797,18 +882,30 @@ const Transfers = () => {
 
 // Vendors Component
 const Vendors = ({ vendors, setVendors }) => {
+  const [showModal, setShowModal] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '', category: 'General', contact: '', email: ''
+  })
+
   const handleAddVendor = () => {
+    setShowModal(true)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     const newVendor = {
       id: `ven-${Date.now()}`,
-      name: 'New Vendor',
-      category: 'General',
-      contact: '+91 98765 00000',
-      email: 'new@vendor.com',
+      name: formData.name || 'New Vendor',
+      category: formData.category,
+      contact: formData.contact || '+91 98765 00000',
+      email: formData.email || 'new@vendor.com',
       rating: 4.0,
       totalOrders: 0,
       pendingPayments: 0
     }
     setVendors([...vendors, newVendor])
+    setShowModal(false)
+    setFormData({ name: '', category: 'General', contact: '', email: '' })
   }
 
   return (
@@ -823,6 +920,29 @@ const Vendors = ({ vendors, setVendors }) => {
           Add Vendor
         </button>
       </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add New Vendor">
+        <form onSubmit={handleSubmit}>
+          <FormField label="Vendor Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+          <FormField label="Category" type="select" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}
+            options={[
+              { value: 'Cement', label: 'Cement' },
+              { value: 'Steel', label: 'Steel' },
+              { value: 'Aggregates', label: 'Aggregates' },
+              { value: 'Paint', label: 'Paint' },
+              { value: 'Tiles', label: 'Tiles' },
+              { value: 'Plumbing', label: 'Plumbing' },
+              { value: 'Electrical', label: 'Electrical' },
+              { value: 'General', label: 'General' }
+            ]} />
+          <FormField label="Contact Number" value={formData.contact} onChange={(e) => setFormData({...formData, contact: e.target.value})} placeholder="+91 98765 00000" />
+          <FormField label="Email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="vendor@email.com" />
+          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} style={{ flex: 1 }}>Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Add Vendor</button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="card">
         <div className="card-header">
@@ -919,8 +1039,12 @@ const Vendors = ({ vendors, setVendors }) => {
 }
 
 // Tasks Component
-const Tasks = ({ tasks, setTasks }) => {
+const Tasks = ({ tasks, setTasks, sites }) => {
   const [filter, setFilter] = useState('all')
+  const [showModal, setShowModal] = useState(false)
+  const [formData, setFormData] = useState({
+    title: '', siteId: '', priority: 'medium', assignee: '', dueDate: ''
+  })
   
   const statusColumns = [
     { status: 'pending', label: 'Pending', color: '#F59E0B' },
@@ -929,18 +1053,25 @@ const Tasks = ({ tasks, setTasks }) => {
   ]
 
   const handleAddTask = () => {
+    setShowModal(true)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
     const newTask = {
       id: `task-${Date.now()}`,
-      title: 'New Task',
-      siteId: 'site-001',
+      title: formData.title || 'New Task',
+      siteId: formData.siteId || 'site-001',
       status: 'pending',
       progress: 0,
-      assignee: 'Unassigned',
-      dueDate: new Date().toISOString().split('T')[0],
-      priority: 'medium',
+      assignee: formData.assignee || 'Unassigned',
+      dueDate: formData.dueDate || new Date().toISOString().split('T')[0],
+      priority: formData.priority,
       materials: []
     }
     setTasks([...tasks, newTask])
+    setShowModal(false)
+    setFormData({ title: '', siteId: '', priority: 'medium', assignee: '', dueDate: '' })
   }
 
   return (
@@ -955,6 +1086,26 @@ const Tasks = ({ tasks, setTasks }) => {
           Add Task
         </button>
       </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add New Task">
+        <form onSubmit={handleSubmit}>
+          <FormField label="Task Title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required />
+          <FormField label="Site" type="select" value={formData.siteId} onChange={(e) => setFormData({...formData, siteId: e.target.value})}
+            options={sites.map(s => ({ value: s.id, label: s.name }))} />
+          <FormField label="Priority" type="select" value={formData.priority} onChange={(e) => setFormData({...formData, priority: e.target.value})}
+            options={[
+              { value: 'high', label: 'High' },
+              { value: 'medium', label: 'Medium' },
+              { value: 'low', label: 'Low' }
+            ]} />
+          <FormField label="Assignee" value={formData.assignee} onChange={(e) => setFormData({...formData, assignee: e.target.value})} placeholder="Worker name" />
+          <FormField label="Due Date" type="date" value={formData.dueDate} onChange={(e) => setFormData({...formData, dueDate: e.target.value})} />
+          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} style={{ flex: 1 }}>Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Add Task</button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="kanban-board">
         {statusColumns.map((column) => {
@@ -1015,30 +1166,51 @@ const Tasks = ({ tasks, setTasks }) => {
 }
 
 // Labor Component
-const Labor = ({ workers, setWorkers }) => {
+const Labor = ({ workers, setWorkers, sites }) => {
+  const [showAddModal, setShowAddModal] = useState(false)
   const [showAttendanceModal, setShowAttendanceModal] = useState(false)
+  const [selectedWorkers, setSelectedWorkers] = useState([])
+  const [formData, setFormData] = useState({
+    name: '', role: 'Labor', siteId: '', dailyWage: '', phone: ''
+  })
   
   const handleAddWorker = () => {
+    setShowAddModal(true)
+  }
+
+  const handleSubmitWorker = (e) => {
+    e.preventDefault()
     const newWorker = {
       id: `wkr-${Date.now()}`,
-      name: 'New Worker',
-      role: 'Labor',
-      siteId: 'site-001',
-      dailyWage: 600,
+      name: formData.name || 'New Worker',
+      role: formData.role,
+      siteId: formData.siteId || 'site-001',
+      dailyWage: parseInt(formData.dailyWage) || 600,
       attendance: 0,
       overtime: 0,
       status: 'active',
-      phone: '+91 98765 00000'
+      phone: formData.phone || '+91 98765 00000'
     }
     setWorkers([...workers, newWorker])
+    setShowAddModal(false)
+    setFormData({ name: '', role: 'Labor', siteId: '', dailyWage: '', phone: '' })
   }
 
   const handleMarkAttendance = () => {
-    const updatedWorkers = workers.map(w => ({
-      ...w,
-      attendance: w.status === 'on_leave' ? w.attendance : w.attendance + 1
-    }))
+    setShowAttendanceModal(true)
+    setSelectedWorkers(workers.map(w => ({ ...w, present: w.status !== 'on_leave' })))
+  }
+
+  const handleSaveAttendance = () => {
+    const updatedWorkers = workers.map(w => {
+      const selected = selectedWorkers.find(sw => sw.id === w.id)
+      return {
+        ...w,
+        attendance: selected && selected.present ? w.attendance + 1 : w.attendance
+      }
+    })
     setWorkers(updatedWorkers)
+    setShowAttendanceModal(false)
   }
 
   return (
@@ -1059,6 +1231,57 @@ const Labor = ({ workers, setWorkers }) => {
           </button>
         </div>
       </div>
+
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Worker">
+        <form onSubmit={handleSubmitWorker}>
+          <FormField label="Worker Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+          <FormField label="Role" type="select" value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})}
+            options={[
+              { value: 'Supervisor', label: 'Supervisor' },
+              { value: 'Mason', label: 'Mason' },
+              { value: 'Electrician', label: 'Electrician' },
+              { value: 'Plumber', label: 'Plumber' },
+              { value: 'Labor', label: 'Labor' },
+              { value: 'Carpenter', label: 'Carpenter' },
+              { value: 'Painter', label: 'Painter' }
+            ]} />
+          <FormField label="Site" type="select" value={formData.siteId} onChange={(e) => setFormData({...formData, siteId: e.target.value})}
+            options={sites.map(s => ({ value: s.id, label: s.name }))} />
+          <FormField label="Daily Wage (₹)" type="number" value={formData.dailyWage} onChange={(e) => setFormData({...formData, dailyWage: e.target.value})} required />
+          <FormField label="Phone Number" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="+91 98765 00000" />
+          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)} style={{ flex: 1 }}>Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Add Worker</button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal isOpen={showAttendanceModal} onClose={() => setShowAttendanceModal(false)} title="Mark Attendance">
+        <div style={{ maxHeight: 400, overflow: 'auto' }}>
+          <p style={{ marginBottom: 16, color: '#64748B' }}>Select workers present today:</p>
+          {selectedWorkers.map(w => (
+            <div key={w.id} style={{ 
+              display: 'flex', alignItems: 'center', gap: 12, padding: 12, 
+              background: w.present ? 'rgba(34,197,94,0.1)' : '#F8FAFC', 
+              borderRadius: 8, marginBottom: 8, cursor: 'pointer' 
+            }}
+            onClick={() => setSelectedWorkers(selectedWorkers.map(sw => sw.id === w.id ? { ...sw, present: !sw.present } : sw))}>
+              <input type="checkbox" checked={w.present} onChange={() => {}} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 500 }}>{w.name}</div>
+                <div style={{ fontSize: 12, color: '#64748B' }}>{w.role}</div>
+              </div>
+              <span className={`badge ${w.status === 'active' ? 'badge-success' : 'badge-warning'}`}>
+                {w.status}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
+          <button className="btn btn-secondary" onClick={() => setShowAttendanceModal(false)} style={{ flex: 1 }}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleSaveAttendance} style={{ flex: 1 }}>Save Attendance</button>
+        </div>
+      </Modal>
 
       <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: 24 }}>
         <div className="stat-card">
@@ -1391,11 +1614,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Dashboard sites={sites} />} />
           <Route path="/sites" element={<Sites sites={sites} setSites={setSites} />} />
-          <Route path="/materials" element={<Materials materials={materials} setMaterials={setMaterials} />} />
+          <Route path="/materials" element={<Materials materials={materials} setMaterials={setMaterials} sites={sites} />} />
           <Route path="/transfers" element={<Transfers />} />
           <Route path="/vendors" element={<Vendors vendors={vendors} setVendors={setVendors} />} />
-          <Route path="/tasks" element={<Tasks tasks={tasks} setTasks={setTasks} />} />
-          <Route path="/labor" element={<Labor workers={workers} setWorkers={setWorkers} />} />
+          <Route path="/tasks" element={<Tasks tasks={tasks} setTasks={setTasks} sites={sites} />} />
+          <Route path="/labor" element={<Labor workers={workers} setWorkers={setWorkers} sites={sites} />} />
           <Route path="/reports" element={<Reports sites={sites} />} />
           <Route path="/ai" element={<AIAssistant />} />
         </Routes>
