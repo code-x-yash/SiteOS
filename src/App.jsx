@@ -13,8 +13,8 @@ import {
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, Area, AreaChart
 } from 'recharts'
 import {
-  sites, materials, materialMovements, vendors, purchaseOrders,
-  tasks, workers, transfers, activities, alerts, costData,
+  sites as initialSites, materials as initialMaterials, materialMovements, vendors as initialVendors, purchaseOrders,
+  tasks as initialTasks, workers as initialWorkers, transfers, activities, alerts, costData,
   materialUsageData, sitePerformanceData, getMaterialStockBySite,
   getSiteById, getMaterialById, getVendorById, getTotalMaterialValue,
   getTotalBudget, getTotalSpent, getActiveTasksCount, aiSuggestions
@@ -199,7 +199,7 @@ const Header = ({ title, onToggleSidebar }) => {
 }
 
 // Dashboard Component
-const Dashboard = () => {
+const Dashboard = ({ sites }) => {
   const totalMaterialValue = getTotalMaterialValue()
   const totalBudget = getTotalBudget()
   const totalSpent = getTotalSpent()
@@ -451,9 +451,28 @@ const AreaChartComponent = ({ data }) => (
 )
 
 // Sites Component
-const Sites = () => {
+const Sites = ({ sites, setSites }) => {
   const [view, setView] = useState('grid')
-  const [selectedSite, setSelectedSite] = useState(null)
+  
+  const handleAddSite = () => {
+    const newSite = {
+      id: `site-${Date.now()}`,
+      name: 'New Construction Site',
+      location: 'New Location',
+      type: 'Commercial',
+      progress: 0,
+      status: 'active',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: '2026-12-31',
+      budget: 10000000,
+      spent: 0,
+      activeTasks: 0,
+      workers: 0,
+      manager: 'TBD',
+      image: '🏗️'
+    }
+    setSites([...sites, newSite])
+  }
   
   return (
     <div className="page-content fade-in">
@@ -477,7 +496,7 @@ const Sites = () => {
               List
             </button>
           </div>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={handleAddSite}>
             <Plus size={18} />
             Add Site
           </button>
@@ -546,10 +565,9 @@ const Sites = () => {
 }
 
 // Materials Component
-const Materials = () => {
+const Materials = ({ materials, setMaterials, sites }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
-  const [selectedMaterial, setSelectedMaterial] = useState(null)
   
   const categories = [...new Set(materials.map(m => m.category))]
   
@@ -565,6 +583,19 @@ const Materials = () => {
     return 'success'
   }
 
+  const handleAddMaterial = () => {
+    const newMaterial = {
+      id: `mat-${Date.now()}`,
+      name: 'New Material',
+      category: 'General',
+      unit: 'pcs',
+      price: 100,
+      totalStock: 0,
+      minStock: 100
+    }
+    setMaterials([...materials, newMaterial])
+  }
+
   return (
     <div className="page-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -572,7 +603,7 @@ const Materials = () => {
           <h2 style={{ fontSize: 24, fontWeight: 600 }}>Material Intelligence</h2>
           <p style={{ color: '#64748B', marginTop: 4 }}>{materials.length} materials across {sites.length} sites</p>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={handleAddMaterial}>
           <Plus size={18} />
           Add Material
         </button>
@@ -765,7 +796,21 @@ const Transfers = () => {
 }
 
 // Vendors Component
-const Vendors = () => {
+const Vendors = ({ vendors, setVendors }) => {
+  const handleAddVendor = () => {
+    const newVendor = {
+      id: `ven-${Date.now()}`,
+      name: 'New Vendor',
+      category: 'General',
+      contact: '+91 98765 00000',
+      email: 'new@vendor.com',
+      rating: 4.0,
+      totalOrders: 0,
+      pendingPayments: 0
+    }
+    setVendors([...vendors, newVendor])
+  }
+
   return (
     <div className="page-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -773,7 +818,7 @@ const Vendors = () => {
           <h2 style={{ fontSize: 24, fontWeight: 600 }}>Vendor Management</h2>
           <p style={{ color: '#64748B', marginTop: 4 }}>{vendors.length} active vendors</p>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={handleAddVendor}>
           <Plus size={18} />
           Add Vendor
         </button>
@@ -874,7 +919,7 @@ const Vendors = () => {
 }
 
 // Tasks Component
-const Tasks = () => {
+const Tasks = ({ tasks, setTasks }) => {
   const [filter, setFilter] = useState('all')
   
   const statusColumns = [
@@ -883,6 +928,21 @@ const Tasks = () => {
     { status: 'done', label: 'Done', color: '#22C55E' }
   ]
 
+  const handleAddTask = () => {
+    const newTask = {
+      id: `task-${Date.now()}`,
+      title: 'New Task',
+      siteId: 'site-001',
+      status: 'pending',
+      progress: 0,
+      assignee: 'Unassigned',
+      dueDate: new Date().toISOString().split('T')[0],
+      priority: 'medium',
+      materials: []
+    }
+    setTasks([...tasks, newTask])
+  }
+
   return (
     <div className="page-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -890,7 +950,7 @@ const Tasks = () => {
           <h2 style={{ fontSize: 24, fontWeight: 600 }}>Task Management</h2>
           <p style={{ color: '#64748B', marginTop: 4 }}>{tasks.length} active tasks across all sites</p>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={handleAddTask}>
           <Plus size={18} />
           Add Task
         </button>
@@ -955,7 +1015,32 @@ const Tasks = () => {
 }
 
 // Labor Component
-const Labor = () => {
+const Labor = ({ workers, setWorkers }) => {
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false)
+  
+  const handleAddWorker = () => {
+    const newWorker = {
+      id: `wkr-${Date.now()}`,
+      name: 'New Worker',
+      role: 'Labor',
+      siteId: 'site-001',
+      dailyWage: 600,
+      attendance: 0,
+      overtime: 0,
+      status: 'active',
+      phone: '+91 98765 00000'
+    }
+    setWorkers([...workers, newWorker])
+  }
+
+  const handleMarkAttendance = () => {
+    const updatedWorkers = workers.map(w => ({
+      ...w,
+      attendance: w.status === 'on_leave' ? w.attendance : w.attendance + 1
+    }))
+    setWorkers(updatedWorkers)
+  }
+
   return (
     <div className="page-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -964,11 +1049,11 @@ const Labor = () => {
           <p style={{ color: '#64748B', marginTop: 4 }}>{workers.length} workers across all sites</p>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
-          <button className="btn btn-secondary">
+          <button className="btn btn-secondary" onClick={handleMarkAttendance}>
             <UserCheck size={18} />
             Mark Attendance
           </button>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={handleAddWorker}>
             <Plus size={18} />
             Add Worker
           </button>
@@ -1074,11 +1159,7 @@ const Labor = () => {
 }
 
 // Reports Component
-const Reports = () => {
-  const handleExportReport = () => {
-    alert('Export Report feature coming soon!')
-  }
-
+const Reports = ({ sites }) => {
   return (
     <div className="page-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -1086,7 +1167,7 @@ const Reports = () => {
           <h2 style={{ fontSize: 24, fontWeight: 600 }}>Reports & Analytics</h2>
           <p style={{ color: '#64748B', marginTop: 4 }}>Comprehensive insights across all sites</p>
         </div>
-        <button className="btn btn-primary" onClick={handleExportReport}>
+        <button className="btn btn-primary">
           <Download size={18} />
           Export Report
         </button>
@@ -1280,7 +1361,11 @@ const AIAssistant = () => {
 // Main App Component
 const App = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [currentPage, setCurrentPage] = useState('dashboard')
+  const [sites, setSites] = useState(initialSites)
+  const [materials, setMaterials] = useState(initialMaterials)
+  const [vendors, setVendors] = useState(initialVendors)
+  const [tasks, setTasks] = useState(initialTasks)
+  const [workers, setWorkers] = useState(initialWorkers)
   const location = useLocation()
   
   const getPageTitle = () => {
@@ -1304,14 +1389,14 @@ const App = () => {
       <main className="main-content">
         <Header title={getPageTitle()} onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/sites" element={<Sites />} />
-          <Route path="/materials" element={<Materials />} />
+          <Route path="/" element={<Dashboard sites={sites} />} />
+          <Route path="/sites" element={<Sites sites={sites} setSites={setSites} />} />
+          <Route path="/materials" element={<Materials materials={materials} setMaterials={setMaterials} />} />
           <Route path="/transfers" element={<Transfers />} />
-          <Route path="/vendors" element={<Vendors />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/labor" element={<Labor />} />
-          <Route path="/reports" element={<Reports />} />
+          <Route path="/vendors" element={<Vendors vendors={vendors} setVendors={setVendors} />} />
+          <Route path="/tasks" element={<Tasks tasks={tasks} setTasks={setTasks} />} />
+          <Route path="/labor" element={<Labor workers={workers} setWorkers={setWorkers} />} />
+          <Route path="/reports" element={<Reports sites={sites} />} />
           <Route path="/ai" element={<AIAssistant />} />
         </Routes>
       </main>
