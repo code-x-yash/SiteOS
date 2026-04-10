@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Plus, ClipboardList, Calendar, User, MapPin, Clock, AlertTriangle, MoreVertical } from 'lucide-react'
-import { Modal, FormField } from '../../App'
+import { Modal, FormField } from '../App'
 
 const formatCurrency = (value) => {
   if (value >= 10000000) return `₹${(value / 10000000).toFixed(1)}Cr`

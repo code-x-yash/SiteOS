@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Plus, Users, UserCheck, Clock, MapPin, AlertTriangle, CheckCircle, X, MoreVertical } from 'lucide-react'
-import { Modal, FormField } from '../../App'
+import { Modal, FormField } from '../App'
 
 const Labor = ({ workers, setWorkers, sites }) => {
   const [showAddModal, setShowAddModal] = useState(false)

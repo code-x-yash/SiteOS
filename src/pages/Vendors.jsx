@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Plus, CreditCard, Phone, Mail, MapPin, MoreVertical } from 'lucide-react'
-import { Modal, FormField } from '../../App'
+import { Modal, FormField } from '../App'
 
 const Vendors = ({ vendors, setVendors }) => {
   const [showModal, setShowModal] = useState(false)
