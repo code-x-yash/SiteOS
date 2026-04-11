@@ -45,7 +45,7 @@ const Sites = ({ sites, setSites }) => {
           <h2 className="page-title">Sites</h2>
           <p className="page-subtitle">Manage construction sites and projects</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+        <button className="btn-add" onClick={() => setShowModal(true)}>
           <Plus size={18} />
           Add Site
         </button>
@@ -147,9 +147,9 @@ const Sites = ({ sites, setSites }) => {
           <FormField label="Type" value={newSite.type} onChange={(e) => setNewSite({ ...newSite, type: e.target.value })} type="select" options={[{value: 'Commercial', label: 'Commercial'}, {value: 'Residential', label: 'Residential'}, {value: 'Hospitality', label: 'Hospitality'}, {value: 'Infrastructure', label: 'Infrastructure'}]} />
           <FormField label="Budget (₹)" value={newSite.budget} onChange={(e) => setNewSite({ ...newSite, budget: e.target.value })} type="number" />
           <FormField label="Manager" value={newSite.manager} onChange={(e) => setNewSite({ ...newSite, manager: e.target.value })} />
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <button type="button" className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Add Site</button>
+          <div className="modal-form-actions">
+            <button type="button" className="btn-ghost" style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="submit" className="btn-add" style={{ padding: '10px 20px' }}>Add Site</button>
           </div>
         </form>
       </Modal>

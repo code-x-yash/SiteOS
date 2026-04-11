@@ -27,7 +27,7 @@ const Vendors = ({ vendors, setVendors }) => {
           <h2 className="page-title">Vendors</h2>
           <p className="page-subtitle">Manage vendor relationships</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+        <button className="btn-add" onClick={() => setShowModal(true)}>
           <Plus size={18} />
           Add Vendor
         </button>
@@ -89,9 +89,9 @@ const Vendors = ({ vendors, setVendors }) => {
           <FormField label="Phone" value={newVendor.phone} onChange={(e) => setNewVendor({ ...newVendor, phone: e.target.value })} type="tel" />
           <FormField label="Email" value={newVendor.email} onChange={(e) => setNewVendor({ ...newVendor, email: e.target.value })} type="email" />
           <FormField label="Address" value={newVendor.address} onChange={(e) => setNewVendor({ ...newVendor, address: e.target.value })} />
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <button type="button" className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Add Vendor</button>
+          <div className="modal-form-actions">
+            <button type="button" className="btn-ghost" style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="submit" className="btn-add" style={{ padding: '10px 20px' }}>Add Vendor</button>
           </div>
         </form>
       </Modal>

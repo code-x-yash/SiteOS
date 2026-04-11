@@ -282,6 +282,54 @@ body {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  background: var(--background);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Add Button Enhancement */
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.btn-add:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.btn-add svg {
+  flex-shrink: 0;
 }
 
 /* Cards */
@@ -469,6 +517,86 @@ tr:hover td {
 .btn-sm {
   padding: 6px 12px;
   font-size: 13px;
+}
+
+.btn-sm svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Export Button */
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-export:hover {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+/* Quick Action Buttons */
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.quick-action-btn:hover {
+  background: var(--background);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-action-btn svg {
+  color: var(--accent);
+}
+
+.quick-action-btn span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Sample Question Buttons */
+.sample-question-btn {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: none;
+  background: var(--background);
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.sample-question-btn:hover {
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+.btn-sm svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Badges */
@@ -984,10 +1112,10 @@ tr:hover td {
 
 /* Forms */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
-.form-label {
+.form-group label {
   display: block;
   font-size: 13px;
   font-weight: 500;
@@ -1004,33 +1132,125 @@ tr:hover td {
   outline: none;
   transition: all 0.15s ease;
   background: var(--surface);
+  color: var(--text-primary);
 }
 
 .form-input:focus, .form-select:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Form in modal */
+.modal-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.modal-form-actions button {
+  flex: 1;
+}
+
+/* Attendance Checkbox List */
+.attendance-list {
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.attendance-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.attendance-item:last-child {
+  border-bottom: none;
+}
+
+.attendance-item:hover {
+  background: var(--background);
+}
+
+.attendance-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.attendance-info {
+  flex: 1;
+}
+
+.attendance-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.attendance-role {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.attendance-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* Form row for date picker */
+.form-row {
+  margin-bottom: 16px;
 }
 
 /* Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
 }
 
 .modal {
   background: var(--surface);
   border-radius: var(--radius-xl);
   width: 100%;
-  max-width: 560px;
+  max-width: 480px;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -1067,6 +1287,13 @@ tr:hover td {
 .modal-body {
   padding: 24px;
   overflow-y: auto;
+  background: var(--surface);
+}
+
+.modal-body form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .modal-footer {
@@ -1165,12 +1392,21 @@ tr:hover td {
 
 /* Transitions */
 .fade-in {
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 /* Responsive */

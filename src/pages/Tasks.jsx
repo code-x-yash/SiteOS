@@ -38,7 +38,7 @@ const Tasks = ({ tasks, setTasks, sites }) => {
           <h2 className="page-title">Tasks</h2>
           <p className="page-subtitle">Track and manage project tasks</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+        <button className="btn-add" onClick={() => setShowModal(true)}>
           <Plus size={18} />
           Add Task
         </button>
@@ -126,9 +126,9 @@ const Tasks = ({ tasks, setTasks, sites }) => {
           <FormField label="Assignee" value={newTask.assignee} onChange={(e) => setNewTask({ ...newTask, assignee: e.target.value })} />
           <FormField label="Due Date" value={newTask.dueDate} onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })} type="date" />
           <FormField label="Budget (₹)" value={newTask.budget} onChange={(e) => setNewTask({ ...newTask, budget: e.target.value })} type="number" />
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <button type="button" className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Add Task</button>
+          <div className="modal-form-actions">
+            <button type="button" className="btn-ghost" style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="submit" className="btn-add" style={{ padding: '10px 20px' }}>Add Task</button>
           </div>
         </form>
       </Modal>

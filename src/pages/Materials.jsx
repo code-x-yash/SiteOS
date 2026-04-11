@@ -47,7 +47,7 @@ const Materials = ({ materials, setMaterials, sites }) => {
           <h2 className="page-title">Materials</h2>
           <p className="page-subtitle">Track inventory and stock levels</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+        <button className="btn-add" onClick={() => setShowModal(true)}>
           <Plus size={18} />
           Add Material
         </button>
@@ -142,9 +142,9 @@ const Materials = ({ materials, setMaterials, sites }) => {
           <FormField label="Price (₹)" value={newMaterial.price} onChange={(e) => setNewMaterial({ ...newMaterial, price: e.target.value })} type="number" />
           <FormField label="Initial Stock" value={newMaterial.totalStock} onChange={(e) => setNewMaterial({ ...newMaterial, totalStock: e.target.value })} type="number" />
           <FormField label="Min Stock Level" value={newMaterial.minStock} onChange={(e) => setNewMaterial({ ...newMaterial, minStock: e.target.value })} type="number" />
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <button type="button" className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Add Material</button>
+          <div className="modal-form-actions">
+            <button type="button" className="btn-ghost" style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="submit" className="btn-add" style={{ padding: '10px 20px' }}>Add Material</button>
           </div>
         </form>
       </Modal>

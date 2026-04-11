@@ -108,7 +108,7 @@ const AIAssistant = () => {
                   outline: 'none'
                 }}
               />
-              <button className="btn btn-primary" onClick={handleSend} disabled={isLoading}>
+              <button className="btn-add" onClick={handleSend} disabled={isLoading}>
                 <Send size={18} />
               </button>
             </div>
@@ -125,22 +125,11 @@ const AIAssistant = () => {
                 {quickActions.map((action, idx) => (
                   <button
                     key={idx}
+                    className="quick-action-btn"
                     onClick={() => handleQuickAction(action.query)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      padding: 14,
-                      borderRadius: 8,
-                      border: '1px solid #E2E8F0',
-                      background: 'white',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'all 0.2s'
-                    }}
                   >
-                    <action.icon size={18} color="#3B82F6" />
-                    <span style={{ fontSize: 13, fontWeight: 500 }}>{action.label}</span>
+                    <action.icon size={18} />
+                    <span>{action.label}</span>
                   </button>
                 ))}
               </div>
@@ -160,17 +149,8 @@ const AIAssistant = () => {
               ].map((q, idx) => (
                 <button
                   key={idx}
+                  className="sample-question-btn"
                   onClick={() => setInput(q)}
-                  style={{
-                    padding: 10,
-                    borderRadius: 6,
-                    border: 'none',
-                    background: '#F8FAFC',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    fontSize: 13,
-                    color: '#64748B'
-                  }}
                 >
                   {q}
                 </button>

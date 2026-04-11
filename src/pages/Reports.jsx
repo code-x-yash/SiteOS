@@ -40,7 +40,7 @@ const Reports = ({ sites }) => {
           <h2 className="page-title">Reports</h2>
           <p className="page-subtitle">Analytics and financial reports</p>
         </div>
-        <button className="btn btn-secondary">
+        <button className="btn-export">
           <Download size={18} />
           Export
         </button>

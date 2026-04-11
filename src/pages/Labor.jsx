@@ -50,11 +50,11 @@ const Labor = ({ workers, setWorkers, sites }) => {
           <p className="page-subtitle">Manage workforce and attendance</p>
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
-          <button className="btn btn-secondary" onClick={() => setShowAttendanceModal(true)}>
+          <button className="btn-add" style={{ background: 'var(--secondary)', boxShadow: '0 2px 4px rgba(30, 41, 59, 0.3)' }} onClick={() => setShowAttendanceModal(true)}>
             <UserCheck size={18} />
             Mark Attendance
           </button>
-          <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+          <button className="btn-add" onClick={() => setShowAddModal(true)}>
             <Plus size={18} />
             Add Worker
           </button>
@@ -143,36 +143,36 @@ const Labor = ({ workers, setWorkers, sites }) => {
           <FormField label="Site" value={newWorker.site} onChange={(e) => setNewWorker({ ...newWorker, site: e.target.value })} type="select" options={sites.map(s => ({value: s.id, label: s.name}))} />
           <FormField label="Daily Wage (₹)" value={newWorker.wage} onChange={(e) => setNewWorker({ ...newWorker, wage: e.target.value })} type="number" />
           <FormField label="Phone" value={newWorker.phone} onChange={(e) => setNewWorker({ ...newWorker, phone: e.target.value })} type="tel" />
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <button type="button" className="btn btn-ghost" onClick={() => setShowAddModal(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Add Worker</button>
+          <div className="modal-form-actions">
+            <button type="button" className="btn-ghost" style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 14 }} onClick={() => setShowAddModal(false)}>Cancel</button>
+            <button type="submit" className="btn-add" style={{ padding: '10px 20px' }}>Add Worker</button>
           </div>
         </form>
       </Modal>
 
       <Modal isOpen={showAttendanceModal} onClose={() => setShowAttendanceModal(false)} title="Mark Attendance">
-        <div style={{ marginBottom: 20 }}>
+        <div className="form-row">
           <FormField label="Date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} type="date" />
         </div>
-        <div style={{ maxHeight: 300, overflow: 'auto' }}>
+        <div className="attendance-list">
           {workers.map((worker) => (
-            <div key={worker.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderBottom: '1px solid #E2E8F0' }}>
+            <div key={worker.id} className="attendance-item">
               <input 
                 type="checkbox" 
+                className="attendance-checkbox"
                 checked={presentWorkers.includes(worker.id)}
                 onChange={() => handleMarkAttendance(worker.id)}
-                style={{ width: 18, height: 18, cursor: 'pointer' }}
               />
-              <div>
-                <div style={{ fontWeight: 500 }}>{worker.name}</div>
-                <div style={{ fontSize: 12, color: '#64748B' }}>{worker.role}</div>
+              <div className="attendance-info">
+                <div className="attendance-name">{worker.name}</div>
+                <div className="attendance-role">{worker.role}</div>
               </div>
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-          <button className="btn btn-ghost" onClick={() => setShowAttendanceModal(false)}>Cancel</button>
-          <button className="btn btn-primary" onClick={saveAttendance}>Save Attendance</button>
+        <div className="attendance-actions">
+          <button className="btn-ghost" style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid var(--border)', background: 'transparent', cursor: 'pointer', fontSize: 14, flex: 1 }} onClick={() => setShowAttendanceModal(false)}>Cancel</button>
+          <button className="btn-add" style={{ flex: 1, justifyContent: 'center' }} onClick={saveAttendance}>Save Attendance</button>
         </div>
       </Modal>
     </div>
